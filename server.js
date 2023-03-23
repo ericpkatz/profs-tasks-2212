@@ -16,6 +16,16 @@ app.get('/api/tasks', async(req, res, next)=> {
   }
 });
 
+app.put('/api/tasks/:id', async(req, res, next)=> {
+  try {
+    const task = await Task.findByPk(req.params.id);
+    res.send(await task.update(req.body));
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
 app.post('/api/tasks', async(req, res, next)=> {
   try {
     res.status(201).send(await Task.create(req.body));
@@ -31,9 +41,10 @@ app.listen(port, async()=> {
   try {
     console.log(`listening on port ${port}`);
     await conn.sync({ force: true });
-    await Promise.all(
+    const [quq, trash, milk] = await Promise.all(
       ['quq', 'take out trash', 'get milk'].map( name => Task.create({ name }))
     );
+    await milk.update({ isComplete: true });
   }
   catch(ex){
     console.log(ex);

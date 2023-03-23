@@ -10,7 +10,7 @@ const Tasks = ()=> {
         tasks.map( task => {
           return (
             <li key={ task.id }>
-              <Link to={`/tasks/${task.id}`}>{ task.name }</Link>
+              <Link to={`/tasks/${task.id}`} style={{ textDecoration: task.isComplete ? 'line-through': ''}}>{ task.name }</Link>
             </li>
           );
         })

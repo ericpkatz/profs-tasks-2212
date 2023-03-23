@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/profs_tasks_db');
-const { UUID, UUIDV4, STRING } = Sequelize;
+const { UUID, UUIDV4, STRING, BOOLEAN } = Sequelize;
 
 const Task = conn.define('task', {
   id: {
@@ -10,8 +10,15 @@ const Task = conn.define('task', {
   },
   name: {
     type: STRING,
-    allowNull: false
-
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
+  },
+  isComplete: {
+    type: BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   }
 });
 
