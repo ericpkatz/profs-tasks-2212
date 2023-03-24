@@ -4,12 +4,15 @@ const path = require('path');
 const { conn, Task } = require('./db');
 
 app.use('/dist', express.static('dist'));
+app.use('/assets', express.static('assets'));
 app.use(express.json());
 app.get('/', (req, res)=> res.sendFile(path.join(__dirname, 'index.html')));
 
 app.get('/api/tasks', async(req, res, next)=> {
   try {
-    res.send(await Task.findAll());
+    res.send(await Task.findAll({
+      order: [['priority', 'asc']]
+    }));
   }
   catch(ex){
     next(ex);
@@ -44,7 +47,7 @@ app.listen(port, async()=> {
     const [quq, trash, milk] = await Promise.all(
       ['quq', 'take out trash', 'get milk'].map( name => Task.create({ name }))
     );
-    await milk.update({ isComplete: true });
+    await milk.update({ isComplete: true, priority: 1 });
   }
   catch(ex){
     console.log(ex);
