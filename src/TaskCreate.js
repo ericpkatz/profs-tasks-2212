@@ -19,7 +19,6 @@ const TaskCreate = ()=> {
   for(let i = 1; i <= 20; i++){
     priorities.push(i);
   }
-  console.log(priorities);
   return (
     <form onSubmit={ create }>
       <input value={ name } onChange={ ev => setName(ev.target.value)} placeholder='name of task'/>

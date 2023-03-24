@@ -8,15 +8,27 @@ const tasks = (state = [], action)=> {
     return action.tasks;
   }
   if(action.type === 'CREATE_TASK'){
-    return [...state, action.task];
+    state = [...state, action.task];
+    state.sort((a, b)=> {
+      if(a.priority > b.priority){
+        return 1;
+      }
+      return -1;
+    });
   }
   if(action.type === 'UPDATE_TASK'){
-    return state.map(task => {
+    state = state.map(task => {
       if(task.id === action.task.id){
         return action.task;
       }
       return task;
-    }); 
+    });
+    state.sort((a, b)=> {
+      if(a.priority > b.priority){
+        return 1;
+      }
+      return -1;
+    });
   }
   return state;
 };
