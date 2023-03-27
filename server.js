@@ -1,12 +1,21 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const { conn, Task } = require('./db');
+const { conn, Task, User } = require('./db');
 
 app.use('/dist', express.static('dist'));
 app.use('/assets', express.static('assets'));
 app.use(express.json());
 app.get('/', (req, res)=> res.sendFile(path.join(__dirname, 'index.html')));
+
+app.get('/api/users', async(req, res, next)=> {
+  try {
+    res.send(await User.findAll());
+  }
+  catch(ex){
+    next(ex);
+  }
+});
 
 app.get('/api/tasks', async(req, res, next)=> {
   try {
@@ -48,6 +57,9 @@ app.listen(port, async()=> {
       ['quq', 'take out trash', 'get milk'].map( name => Task.create({ name }))
     );
     await milk.update({ isComplete: true, priority: 1 });
+    const [moe, lucy, larry] = await Promise.all(
+      ['moe', 'lucy', 'larry'].map( name => User.create({ name }))
+    );
   }
   catch(ex){
     console.log(ex);
