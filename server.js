@@ -47,6 +47,11 @@ app.post('/api/tasks', async(req, res, next)=> {
   }
 });
 
+app.use((err, req, res, next)=> {
+  console.log(err);
+  res.status(500).send({ error: err.message });
+});
+
 const port = process.env.PORT || 3000;
 
 app.listen(port, async()=> {
@@ -60,6 +65,12 @@ app.listen(port, async()=> {
     const [moe, lucy, larry] = await Promise.all(
       ['moe', 'lucy', 'larry'].map( name => User.create({ name }))
     );
+
+    await trash.update({ userId: moe.id });
+    require('fs').readFile('trash.png', 'base64', async(err, data)=> {
+      const image = `data:image/png;base64,${data}`;
+      await trash.update({ image });
+    });
   }
   catch(ex){
     console.log(ex);

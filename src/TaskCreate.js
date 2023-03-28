@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { createTask } from './store';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const TaskCreate = ()=> {
   const [name, setName ] = useState('');
   const [isComplete, setIsComplete] = useState(false);
   const [priority, setPriority] = useState(5);
+  const [userId, setUserId] = useState('');
+  const [image, setImage ] = useState('');
+  const { users } = useSelector(state => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const ref = useRef();
+
+  useEffect(()=> {
+    ref.current.addEventListener('change', (ev)=> {
+      const file = ev.target.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.addEventListener('load', ()=> {
+        setImage(reader.result);
+      });
+    });
+  }, [ref]);
+
   const create = async(ev)=> {
     ev.preventDefault();
-    await dispatch(createTask({ name, isComplete, priority }));
+    await dispatch(createTask({ name, isComplete, priority, userId, image }));
     navigate('/');
   };
 
@@ -35,7 +51,19 @@ const TaskCreate = ()=> {
           })
         }
       </select>
-      <button>Create</button>
+      <select value={ userId } onChange={ ev => setUserId(ev.target.value)}>
+        <option value=''>Choose A User</option>
+        {
+          users.map( user => {
+            return (
+              <option value={ user.id } key={ user.id }>{ user.name }</option>
+            );
+          })
+        }
+      </select>
+      <input type='file' ref={ ref }/>
+      { !!image && <img src={ image } style={{ width: '100px'}} /> }
+      <button disabled={ !userId }>Create</button>
     </form>
   );
 };

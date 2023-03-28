@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchTasks, fetchUsers } from './store';
 import { Routes, Route, Link} from 'react-router-dom';
 import Tasks from './Tasks';
-import PendingTasks from './PendingTasks';
 import TaskCreate from './TaskCreate';
 import TaskEdit from './TaskEdit';
 import Users from './Users';
@@ -28,7 +27,7 @@ const App = ()=> {
         <Route path='/' element={ <Tasks /> } />
         <Route path='/users' element={ <Users /> } />
         <Route path='/tasks/create' element={ <TaskCreate /> } />
-        <Route path='/tasks/pending' element={ <PendingTasks /> } />
+        <Route path='/tasks/pending' element={ <Tasks /> } />
         <Route path='/tasks/:id' element={ <TaskEdit /> } />
       </Routes>
     </div>
