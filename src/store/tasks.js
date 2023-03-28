@@ -1,7 +1,4 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
 import axios from 'axios';
-import logger from 'redux-logger';
 
 const tasks = (state = [], action)=> {
   if(action.type === 'SET_TASKS'){
@@ -33,27 +30,6 @@ const tasks = (state = [], action)=> {
   return state;
 };
 
-const users = (state = [], action)=> {
-  if(action.type === 'SET_USERS'){
-    return action.users;
-  }
-  return state;
-};
-
-const reducer = combineReducers({
-  tasks,
-  users
-});
-
-const store = createStore(reducer, applyMiddleware(logger, thunk));
-
-export const fetchUsers = ()=> {
-  return async(dispatch)=> {
-    const response = await axios.get('/api/users');
-    dispatch({ type: 'SET_USERS', users: response.data });
-  };
-};
-
 export const fetchTasks = ()=> {
   return async(dispatch)=> {
     const response = await axios.get('/api/tasks');
@@ -75,4 +51,4 @@ export const updateTask = (task)=> {
   };
 };
 
-export default store;
+export default tasks;
